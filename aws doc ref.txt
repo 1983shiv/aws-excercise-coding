@@ -1,0 +1,649 @@
+AWS Certified DevOps Engineer
+
+
+AWS ELB : https://www.canva.com/design/DAGUDCcZib8/dlSmSgJuNFziG4ybYEVM3Q/edit
+CloudFormation : https://www.canva.com/design/DAGVpPAEyWY/EVrR6j1GPKW01UXCDG9hmw/edit
+S3 : https://www.canva.com/design/DAGUNEUOrQY/rvplovqZ1xpdCoEofeoSyw/edit
+RDS : https://www.canva.com/design/DAGUgs2gVoo/tGSJIKnj2QqAntUXdzmgFQ/edit
+DynamoDB : https://www.canva.com/design/DAGUyDydoPs/UFKYoKQNJrZB46qwTEU6fg/edit 
+Lambda : https://www.canva.com/design/DAGVKMDnXLQ/cQ2_JxnXI50T5RAHdK0uIw/edit
+
+
+https://github.com/aws-cloudformation/aws-cloudformation-templates/tree/main
+
+Courses 👍
+https://explore.skillbuilder.aws/learn/mycourses
+https://explore.skillbuilder.aws/learn/course/5741/play/66370/introduction-and-testing-overview
+
+https://explore.skillbuilder.aws/learn/course/16352/play/80851/aws-training-recommendations
+https://explore.skillbuilder.aws/learn/course/113/play/261/advanced-cloudformation-macros
+
+https://explore.skillbuilder.aws/learn/course/internal/view/elearning/16512/exam-prep-enhanced-course-aws-certified-devops-engineer-professional-dop-c02-english
+
+https://aws.amazon.com/certification/exams/?nc2=sb_ce_exm
+
+
+Courses:
+https://explore.skillbuilder.aws/learn/course/external/view/elearning/16352/exam-prep-standard-course-aws-certified-devops-engineer-professional-dop-c02-english
+https://explore.skillbuilder.aws/learn/course/internal/view/elearning/16512/exam-prep-enhanced-course-aws-certified-devops-engineer-professional-dop-c02-english
+https://explore.skillbuilder.aws/learn/course/external/view/elearning/14673/aws-certified-devops-engineer-professional-official-practice-question-set-dop-c02-english
+
+Exam Guide : 
+https://d1.awsstatic.com/training-and-certification/docs-devops-pro/AWS-Certified-DevOps-Engineer-Professional_Exam-Guide.pdf
+
+
+SDLC Automation:
+
+Lesson 1 : CI/CD Concept
+-----------------------------
+
+Problem : What problem are we trying to solve? These types of projects are slow, not iterative, and have long release cycles.
+So, what could be possibly go wrong : Testing, adaptability and Accountability.
+Hence the traditional goal of software development and IT operations do not really align.
+
+How Do We Merge the Goals of Dev and Ops ?
+Dev >> How many changes, features and defects can we push into production and how quickly can we do it?
+Ops >> We want stable and available systems 
+
+Shorten dev lifecycle. Deliver features, fixes and updates frequently.
+DevOps = Dev + QA + Operations 
+
+How Does DevOps Look in Actions?
+Plan >> Code >> Build >> Test >> Release >> Deploy >> Operate >> Monitor 
+
+What is CI/CD ?
+
+Is Continuous Delivery and Continuous Deployment are same ?? 
+
+CI = Code >> Test >> Build 
+Continuous Delivery = Build >> QA 
+Deploy = Release 
+CD = Continuous Delivery + Deploy 
+
+Developer Tools on AWS 
+Implementing CI/CD with AWS Developer tools to accelerate the software development and release cycle .
+
+Code Commit >> Code Build >> Code Deploy 
+--------------------------------------->
+			Code Pipeline
+
+
+Continuous Development : An update is automated the whole way out to production with the safeguards of Continuous Delivery. 
+Continuous Delivery : Focuses on safely getting changes out to production. Key point : there is a stop for approval before going to production.
+
+Lesson 2 : Codecommit Overview
+------------------------------
+
+What is Codecommit : It is a managed service that hosts private Git repositories.
+Why not just use Git? : Well, you can. But the key term is managed service. Managed Serivces mean you don't have to think of servers, its storage, security, scalability, fault tolarence, size limits etc.
+
+Managed Services Benefits:
+	Highly available, scalable and fault tolerant
+	No Size limits 
+	Integrate with other AWS services (CodeBuild, CodePipeline, CodeDeploy, Lambda, SNS)
+	Works with existing Git-based tools  
+
+Exam Tips : 
+	1. CodeCommit has many benefits but is not the only repository you can use in an AWS deployment pipeline.
+	2. When in CodeCommit (or CodeBuild and CodeDeploy) in the AWS Management Console, study the dropdowns. 
+	3. Other repositories that can be used in AWS deployments include S3, Github, Bitbucket and Github Enterprises. 
+
+Lesson 3 : Codecommit Actions
+------------------------------
+Console Work:
+aws configure
+// paste access ID
+// paste access secret receive from aws console credentials
+
+// list all the repo in codecommit
+aws codecommit list-repositories
+
+// create a repo on codecommit
+aws codecommit create-repository --repository-name DummyRepo1
+
+// above command return a json Metadata containing : 
+{
+	"repositoryMetadata": { 
+		"repositoryName" : "DummyRepo1",
+		"cloneUrlSsh": "ssh://git-codecommit.us-east-1.amazonaws.com/v1/repos/DummyRepo1",
+		"lastModifiedDate": 1635429762.856,
+		"repositoryId" : "",
+		"cloneUrlHttp": "",
+		"creationDate":1635429762.856,
+		"Arn": "arn.aws.codecommit:us-east-1:37337434894:DummyRepo1",
+		"accountId": '3434343989'
+	}
+}
+// to view a repository
+aws codecommit get-repository --repository-name DummyRepo1
+
+
+// to delete a repository
+aws codecommit delete-repository --repository-name DummyRepo1
+
+
+Note : What we can do with cli, we can prepare a script of all the required cli commands and automate that process.
+
+Lesson 4 : CodeCommit Cloning Commit Pushes and Pulls - Demo
+------------------------------
+
+git clone ssh://git-codecommit.us-east-1.amazonaws.com/v1/repos/DummyRepo1 
+git commit -m "message"
+git push <remote name> <branch name >
+	Example : git push origin master 
+
+git pull origin master 
+
+git remote 
+git branch 
+git diff origin/main 
+
+Commit: Understand that commit is committing changes to your local repository. To get these changes to the main 
+repository, you then need to do a push 
+
+Order of Operations: 
+1. Make changes to local files/code. 
+2. Commit changes to your local repo. 
+3. Push those changes to a remote repo.
+
+
+Lesson 5 : CodeCommit Merging and Branching - Demo
+------------------------------
+What's the problem? 
+Our developers are making changes in the same file to the same lines of code. This causes a conflict and needs 
+to be sorted out. 
+
+What's the solution?
+The merge process (it is process not the command ) will help to resolve these conflicts and keep our code and our team on the same page. 
+ 
+What Are Branches ? Branches are an independent line of development. They allow us to safely make changes to code without disrupting
+the code on the master branch.
+
+Why Branches ? To build a new feature, To fix bugs, Without disrupting the master branch 
+
+// to create new branch and  checkout to that branch 
+git checkout -b cloudformation 
+
+// create a new file and add/edit the code 
+touch new_setting.json 
+vim new_setting.json 
+
+	// your line of codes goes here and after completing the code, how to come out from vim 
+
+wq! 
+
+git add new_setting.json 
+git commit -m "one file changed"
+
+// now come back to main branch 
+git checkout main 
+
+// now perform the merge 
+git merge cloudformation 
+
+// delete the branch, where -d stand for deletion
+git branch -d cloudformation 
+
+Three things to remember when it comes to Branches 👍
+1 : Separate Work 
+2 : Work on new Features 
+3 : Create a bug fix branch 
+
+
+Lesson 6 : CodeCommit Data Security
+----------------------------------
+AWS KMS : KMS : Key Management Service, KMS is created for each region, so when you change the region, you have to create new keys to access the services.
+
+Use CodeCommit when you need : 
+1. Data encrypted in transit and at rest. 
+2. Managed servicee AWS secures 
+3. Highly available and scalable 
+
+Data Security Scenario : you want you dev team to have full accesss to CodeCommit but they should not be able to create or delete repos.
+
+CodeCommit can use deny policy, what can be done and what can be deny on our repo. 
+>> We can add the user group and apply the group policy such as dev team can only use repo, then can not create or delete repos. 
+>> And then apply or assign that group to dev team. 
+
+Suppose, you have created a AWSCodeCommitPowerUser policy and attach it to each developer account.
+Or better approach, create an IAM group to manage the developers in one place and attach that policy to the group.
+
+Exam Tips : CodeCommit repository are automatically encrypted at rest. 
+Repository Tip : Repositories are also encrypted in transit using either ssh or https or both (configurable at setup).
+
+Lesson 7 : Introduction to CodeBuild
+----------------------------------
+What is CodeBuild? 
+Fully managed continuous integration service that compiles source code, run tests and produces software packages that are ready to deploy. 
+
+How do we access CodeBuild? 
+Management Console >> CLI >> SDK >> CodePipeline 
+
+How can CodeBuild be used? 
+It can be added to the build stage and also the test stage in a pipeline. 
+You must provide CodeBuild with a build project. 
+
+What is build project?
+A build project includes information about how to run a build, including where to get the source code, which build environment to use, which build commands to run, and where to store the build output.
+
+
+
+Lesson 8 : CodeBuild Walkthrough - Demo
+----------------------------------
+
+Management Console >> CLI >> SDK >> 
+	1 >> CodeBuild >> 
+	2 >> Build Project >> 
+	3 >> Source Code >> 
+	4 >> Output to S3 or SNS >>
+	5 >> CloudWatch >>
+	
+Note : As input, you must provide CodeBuild with a build project. 
+
+Do you need to run CodeBuild after a successfull merge to CodeCommit?
+
+Dev >> CodeCommit >> CloudWatch Event >> CodeBuild >> CloudWatch Logs >> CloudWatch Event >> Lambda Function >> Slack (Notifications to Slace)
+
+You need to review CodeBuild logs and notify personnel of new logs.
+	Send CodeBuild logs to CloudWatch Logs. 
+	Set up a CloudWatch event to monitor for new logs 
+	Trigger a Lambda function to sent a notification to Slack.
+
+
+Review : 
+Input 	: you must provide CodeBuild with a build project.
+Output 	: if there is any build output, the build environment uploads its output to an S3 bucket. 
+
+Exam Tips: 
+Do you need a build stage? 
+	Only if your code artifacts need to be built/packaged. 
+	Example : For java, you build a JAR file, whereas, simple HTML does not need to be built. 
+
+What is a buildspec? 
+	A Collection of build commands and related settings, in YAML format that CodeBuild uses to run a build.	
+
+
+
+Lesson 9 : Working with Build Projects and the Buildspec File
+----------------------------------
+
+Steps in a Build Project: 
+1. Submitted 
+2. Provisioning
+3. Download Source 
+4. Install 
+5. Pre-Build 
+6. Build 
+7. Post-Build 
+8. Upload Artifacts 
+9. Finalizing
+10.Completing 
+
+How does a buildspec file work with the build environment?
+	you can include a buildspec as part of the source code or you can define a buildspec when you create a build project.
+
+What benefits are there to using a buildspec file?
+	Without a buildspec, CodeBuild cannot successfully convert your build input into build output or locate 
+	the build output artifact in the build environment to upload to your output bucket. 
+
+Note : if you include a buildspec as part of the source code, by default, the buildspec file must be named buildspec.yml 
+and placed in the root of your source directory. you can specify only 1 buildspec for a build project, regardless of the buildspec file's name.
+!buildspec.yml 
+
+version: 0.2
+phases:
+	install:
+		runtime-versions:
+			java:corretto11
+		commands:
+			- echo Nothing to do in the install phase 
+	pre_build: 
+		commands:
+			- echo Nothing to do in the pre_build phase 
+	build:
+		commands:
+			- echo Build started on 'date' 
+			- mvn install 
+	post_build:
+		commands:
+			- echo Build started on 'date'
+artifacts:
+	files:
+		- target/messageUtil-1.0.jar
+
+
+Exam Tips : 
+1. Where the source?
+2. Which build commands and in what order? 
+3. which  runtimes and tools are needed ?
+4. Is a service role needed to work with other AWS services? 
+5. Is CodeBuild working with your PVC? 
+	What do you need? VPC ID, Security groups, Subnet IDs 
+
+
+Lesson 10 : Introduction to CodeDeploy
+----------------------------------
+What is the CodeDeploy?
+	AWS CodeDeploy is a fully managed deployment service offered by Amazon Web Services (AWS) that automates the process of deploying applications to a variety of compute resources, such as Amazon EC2 instances, AWS Lambda functions, and on-premises servers. The service helps you manage the release process, ensuring that applications are deployed consistently and reliably with minimal downtime.
+
+What we can deploy?
+	We can deploy code, like java code, or js code or python code, lambda functions, web and configuration files, exe files, multi media files, packages, scripts etc.
+
+CodeDeploy Setup and Configuration: 
+	Step1 : Provision an IAM user with access to CodeDeploy (Attach a CodeDeploy policy to the user)		
+	Step2 : Create an IAM instance profile to allow EC2 to access your repositories. 
+	Step3 : Create an IAM service role that will grant CodeDeploy access to other AWS resources. 
+
+Key Features of AWS CodeDeploy:
+	Multi-Platform Deployment: It can be used to deploy applications to Amazon EC2 instances, AWS Lambda, and on-premises servers.
+	Automatic Rollback: CodeDeploy can automatically roll back deployments if errors are detected during the deployment process, ensuring that the previous stable version is restored.
+	Blue/Green Deployment: This deployment strategy helps reduce downtime and risk by running two separate environments: one with the current application version (the "Blue" environment) and the other with the new version (the "Green" environment). After validating the new version, traffic is switched from Blue to Green.
+	Canary and Linear Deployments: CodeDeploy supports gradual deployment strategies, like canary (small percentage of traffic to the new version) or linear (a fixed, incremental rollout), which helps to test new versions with a subset of traffic before the full deployment.
+	Monitoring and Logging: CodeDeploy integrates with Amazon CloudWatch and AWS CloudTrail to provide detailed monitoring and logging, allowing you to track the success or failure of deployments and diagnose issues quickly.
+	Integration with Other AWS Services: CodeDeploy can be integrated with other AWS services like CodePipeline (for continuous integration/continuous deployment workflows), Amazon EC2 Auto Scaling, and AWS CloudFormation for infrastructure as code.
+
+Deployment Strategies:
+	In-Place Deployments: CodeDeploy updates the application on the existing instances, replacing the old version with the new version on the same resources.
+	Blue/Green Deployments: This strategy involves deploying the new version to a set of new instances (Green environment) while keeping the old version live on the original instances (Blue environment). After testing the new version, traffic is shifted to the Green environment.
+
+Benefits:
+	Automated and Scalable: AWS CodeDeploy automates the deployment process, reducing the manual effort and the risk of human error. It scales easily to deploy to large numbers of instances.
+	Flexible Rollout: Supports multiple deployment strategies, offering flexibility in how you roll out updates.
+	Integration with CI/CD Pipelines: Easily integrates with AWS CodePipeline and other CI/CD tools to automate the entire software release process from code commit to deployment.
+	Error Detection and Rollback: It ensures that if any issues occur during deployment, the system can automatically revert to the last known good configuration.
+
+Lesson 11 : CodeDeploy Setup and Configuration
+-------------------------------------- 
+
+Lesson 16 : CodePipeline with CodeBuild
+-------------------------------------- 
+
+Have we turned on versioning?
+	The artifact when S3 is the source is always the same object key. The new version of the object(same key) is what leads to the pipeline triggering.
+
+Why do we need versioning ?
+	CodePipeline uses the ETag to manage and understand the flow so far for that execution of the pipeline. Remember that a CodePipeline can have multiple executions at the same time, so it needs to have a way to identify which version of the artifacts is tied to which execution.
+
+Common Questions?
+Do we want to automate deployment right now?
+	We have the choice when we want to automate.
+
+Can we choose the stages of our pipeline?
+	Yes, but a pipeline must have at least 2 stages.
+
+Do we have to have a deployment stage?
+	No. A deployment stage is not mandatory.
+
+
+
+CodeBuild : 3 Things to remember 
+1. CodeBuild can be used in both build and test stages of a pipeline.
+2. You can add a CodeBuild build action to a pipeline as well as a CodeBuild test action.
+3. In this way, the entire build/test process can be automated in CodePipeline.
+
+
+Lesson 17 : Managing CodePipeline
+-------------------------------------- 
+
+
+Lession 20 : CodePipeline with EventBridge
+--------------------------------------
+Automation : When thinking of automation, think of services such as EventBridge, Lambda, and SNS. Lambda needs to be triggered, and EventBridge provides the trigger and starts many automations.
+EventBridge : Amazon CloudWatch Events and EventBridge are the same underlying service and API, but EventBridge provides more features. EventBridge is the preferred way to manage events moving forward.
+
+
+Lession 21 : Jenkins with AWS Developer Tools
+--------------------------------------
+What is Jenkins?
+	Jenkins is an open source CI/CD tool that can replace CodeBuild, CodeDeploy, and CodePipeline of AWS.
+
+AWS Deployment 
+	Jenkins is deployed in a master/agent configuration. There is a master server and worker nodes.
+	An ideal configuration would be to have multiple masters in multiple AZs.
+	All Jenkins configurations need a jenkinsfile, which provides instructions for Jenkins.
+
+Jenkins with CodePipeline?
+	
+	Developer >> CodeCommit >> CodePipeline >> Jenkins(EC2 Instances)
+									|
+								CodeDeploy	>> Application Server (EC2, where the application is hosted)
+		
+	1. Developer commits code to AWS CodeCommit
+	2. AWS CodePipeline detects that new code and triggers the pipeline.
+	3. AWS CodePipeline invokes Jenkins to build the application.
+	4. AWS CodePipeline triggers deployment on AWS CodeDeploy.
+	5. AWS CodeDeploy deploys the application onto EC2.
+
+Note : read Jenkins on AWS whitepaper.
+How does Jenkins interact with AWS services ? With Jenkins plugins for AWS.
+
+Exam Tips : 
+How to integrate CodeBuild with existing Jenkins biuld jobs?
+	Use the Jenkins plugin for CodeBuild to integrate. This eliminates the need for you to provision, configure and manage Jenkins build nodes.
+
+What stages does Jenkins operate in?
+	Jenkins can operate in the build and/or deploy stages of a pipeline in AWS CodePipeline. 
+
+Lession 22 : SDLC Automation Scenarios
+--------------------------------------
+Scenario 1:
+What tools can we use to grant and/or restrict access to our CodeCommit repositories ?
+Or 
+How can we grant developer full access to CodeCommit, but not the ability to create/delete repositories?
+	We can create a policy and can attach to AWSCodeCommitPowerUser, hence we can restrict access.
+
+Scenario 2:
+Where would we store CodeBuild artifacts, and what do we need to do to prepare the storage location?
+	We can use S3 to store artifacts outputted from CodeBuild. Turn on versioning and encryption.
+
+Scenario 3:		
+We need CodeBuild to run after code is committed to the CodeCommit repository ?
+	CodeCommit >> EventBridge >> CodeBuild
+	EventBridge event monitors CodeCommit for commits and then triggers a build.
+
+Scenario 4:
+We have a code pipeline consisting of CodeCommit, CodeBuild, and CodeDeploy. But we want to perform a code review before building the code, as well as do QA testing before deploying the code.
+	We can create CodePipeline which consist of stages, where we can configure different reviews before each stage execute.
+	i.e. CodeCommit >> | CodeBuild >> Review >> CodeBuild >> Testing QA >> CodeDeploy | 
+	Or 
+	CodeCommit >> Manual Approval >> CodeBuild >> Manual Approval of QA >> CodeDeploy
+
+	Add manual approval actions after the CodeCommit and CodeBuild stages.
+
+
+Section 2 : Configuration Management and infrastructure as Code
+Lession 8 : Lambda SAM Framework
+--------------------------------------
+We can include Lambda function in our CloudFormation templates?
+	Lambda function >> SAM >> CloudFormation >> CF Template >> CF Stack 
+
+SAM : Open source framework for building serverless applications.
+CloudFormation : it is a CloudFormation extension optimizied for serverless applications.
+CF Template : Using the Transform function, we can include SAM code in our CF template.	
+
+We want to source control SAM template just as we do with CF template.
+
+
+3 Thinkgs to Remember:
+1. SAM syntax is CloudFormation syntax (YAML, not JSON)
+2. There is no charge for SAM. You are charged only for the resources created.
+3. The SAM CLI provides a Lambda like execution environment that lets you locally build, test and debug applications defiend by SAM templates.
+
+
+
+IAM?
+IAM is a service that helps you securely control access to AWS resources.
+It allow you to manage users, roles and permissions to define who can access what within your AWS environment.
+
+Benefits:
+>> Free Service : IAM is offered at no additional cost.
+>> Global Serivce, mean around the world you are account would be unique it is not region specific. 
+>> Root account created by default, shouldn't be used or shared.
+
+What we can do:
+>> Create Users : You can create individual users accounts for people who need access to your AWS resources.
+>> Assign Permissions : You can assign specific permissions to users, groups, or roles to control what actions they can perform on AWS services.
+>> Create Groups : You can group users together and assign permissions to the group, making management easier for multiple users.
+>> Create Roles : You can create roles to assign temporary permissions to AWS services or users, especially useful for securely managing permissions across different AWS resources.
+>> Define Policies : You can create and attach custom policies to define fine-grained permissions for controlling access to AWS resources.
+>> Manage Federated Access : IAM allows integrating with external identity providers(like active directory) for centralized management of user access across AWS.
+
+MFA : Multi Factor Authentication is an extra layer of security that requires users to provide two or more forms of verification, like a password and a code from their phone, to access their accounts.
+MFA = username + password + security code.
+
+AWS IAM : ways of accessing AWS ?
+The AWS Management Console provides a graphical, web based approach.
+The AWS CLI provides a command line scripting approach.
+AWS SDKs and APIs offer programmatic, code-based access, allowing users to integrate AWS directly into their applications.
+
+AWS IAM Best Practices:
+>> Avoid using root account except of account setup.
+>> Add user to a group and assign permission to group.
+>> Use password policy or MFA.
+>> Use Access Keys for CLI/SKD.
+>> Never share Access Keys or Password.
+>> Audit the permission using IAM credential report.
+
+
+AWS EC2 Instance & Security Groups
+AWS EC2 : Amazon Elastic Compute Cloud is a cloud service that provides resizable virtual servers, called instances which you can use to run applications.
+
+Imagine you're running a business and need a server to host your website or application. 
+instead of buying and managing physical servers, AWS EC2 lets you rent virtual servers in the cloud. These virtual servers are called instances.
+
+You can configure several options:
+OS >> RAM >> CPU >> Disk Space >> Network /Firewall >> How to access the machine ?
+
+Terms : 
+Instance Type : Select the hardware capacity (e.g. CPU, memory).
+AMI : Amazon Machine Image : Choose the operating system and software (linux, mac, windows)
+Storage : Configure the type and size of storage (e.g. EBS Volume)
+Security Groups : Set up firewall rules to control inbound/outbound traffic.
+Key Pair : Create or use an existing key pair for SSH access. 
+Network Settings: Configure VPC, subnet, and assign public or private IP address. 
+IAM Role : Attach an IAM role for permission to access other AWS resources. 
+User Data : Add Script to be executed when the instance starts. 
+Elastic IP : Optionally associatedd a static IP address for consistent public access.
+
+Importance of Security Groups:
+Region Specific 
+Only "Allow" rule (but no deny rule)
+All inbound traffic blocked and outbound allowed by default.
+
+You define rule for specific:
+	Protocols (like http, https, ssh, etc.)
+	Port Numbers (e.g. port 80 for http, port 22 for ssh )
+	IP Address or range (e.g. allow traffic only from a specific IP or range of IPs)
+
+If you allow incoming traffic on a specific port (e.g. port 80), the outgoing response traffic is automatically allowed without an explicit outbound rule. 
+
+Instace Type:
+Case 1 : Small Website or Blog 
+	Suitable Type : t3:micro or t3.small (General Purpose)
+Case 2 : E-Commerce Website 
+	Suitable Type : m5.large or m5.xlarge (General Purpose)
+
+Case 3 : Real Time Video Rendering and Streaming (Accelerated Computing )	
+	Suitable Type : g5.12xlarge or g5.24xlarge 
+
+Case 4 : In-Memory Database for Real Time Analytics (Memory Optimized)
+	Suitable Type : r6g.16xlarge or x2idn.32xlarge 
+
+
+Port Numbers for common applications:
+http 		80
+https 		443
+ssh 		22
+ftp 		21
+sftp 		22
+smtp 		25
+rdp 		3389
+MySql 		3306 
+PostgreSql 	5432
+DNS 		53 
+
+
+
+
+#!/bin/bash 
+sudo yum update -y 
+
+#install apache web server (httpd)
+sudo yum install -y httpd 
+sudo systemctl start httpd 
+sudo systemctl enable httpd 
+
+
+#create a simple html file to verify the web server is running 
+echo "<html><h1>Welcome to Apache Web Server on Amazon Linux </h1></html>" > /var/www/html/index.html 
+
+
+codedeploy role : aws_codedeploy_role_to_deploy_on_ec2
+codecommit > repo > git 
+ec2 : first_ce2_instance_001
+codepipeline : first_ce2_instance_001_pipeline
+
+
+Elastic Beanstalk 
+app name : myfirstnodejsapp002
+roles : elastic_beanstalk_app_role
+roles : ec2_elastic_beanstalk_app_role
+
+
+Starting on October 1, 2024, Amazon EC2 Auto Scaling will no longer support the creation of launch configurations for new accounts. Existing environments will not be impacted. For more information about other situations that are impacted, including temporary option settings required for new accounts, refer to Launch templates  in the Elastic Beanstalk Developer Guide.
+https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-autoscaling-launch-templates.html
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": [
+                    "elasticbeanstalk.amazonaws.com"
+                ]
+            },
+            "Action": [
+                "sts:AssumeRole"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "sts:ExternalId": "elasticbeanstalk"
+                }
+            }
+        }
+    ]
+}
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "sts:AssumeRole"
+            ],
+            "Principal": {
+                "Service": [
+                    "ec2.amazonaws.com"
+                ]
+            }
+        }
+    ]
+}
+
+
+CloudFormation GitRef:
+https://github.com/aws-cloudformation/aws-cloudformation-templates
+https://github.com/MaxCloud101/course-cloudformation/
+https://gist.github.com/christophchamp/56c99b000f19fb8c4552a336f5961dbe
+
+User Data in EC2 for CloudFormation
+data script log to /var/log/cloud-init-output.log 
+
+What are the resources:
+	AWS -> aws::product-name::data-type-name 
+
+http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html	
+
