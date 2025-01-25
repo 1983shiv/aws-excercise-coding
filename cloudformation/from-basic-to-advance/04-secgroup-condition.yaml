@@ -1,0 +1,26 @@
+Parameters:
+  EnvType:
+    Description: If EnvType is prod, then security groupd will be created else not.
+    Type: String
+    Default: Dev
+    AllowedValues:
+      - Dev
+      - Prod
+      - Testing
+      - Stagging
+
+Resources:
+  # our EC2 Security Group 
+  SSHSecurityGroupOutput:
+    Type : AWS::EC2::SecurityGroup
+    Condition: CreateProdResources
+    Properties:
+      GroupDescription: Enable SSH Access via port 22
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+
+Conditions:
+  CreateProdResources: !Equals [ !Ref EnvType, Prod]      

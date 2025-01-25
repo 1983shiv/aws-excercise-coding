@@ -1,0 +1,44 @@
+Parameters:
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instances.
+
+  ImageId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+
+Resources:
+  MyEC2Instance:
+    Type: AWS::EC2::instance 
+    Properties:
+      ImageId: !Ref Imageid 
+      KeyName: !Ref KeyName
+      # ssm dynamic reference
+      InstanceType: '{{ resolve:ssm:/ec2/InstanceType:1}}'
+  
+  MyIAMUser:
+    Type: AWS::IAM::User 
+    Properties:
+      UserName: 'sample-user'
+      LoginProfile:
+        # ssm-secure dynamic reference (latest version)
+        Password: '{{resolve:ssm-secure:/iam/userPassword}}'
+
+  MyDBInstance:
+    Type: AWS::RDS::Instance 
+    Properties:
+      DBInstanceClass: db.t2.micro 
+      Engine: mysql 
+      AllocatedStorage: "20"        
+      DBSecurityGroups: 
+        - Ref: DBSecurityGroup 
+      # secretsmanager dynamic reference 
+      MasterUsername: '{{resolve:secretsmanager:MyRDSSecret:SecretString:username}}'
+      MasterPassword: '{{resolve:secretsmanager:MyRDSSecret:SecretString:password}}'
+
+  DBSecurityGroup:
+    Type: AWS::RDS::DBSecurityGroup
+    Properties:
+      GroupDescription: 'Allow access from anywhere to database'
+      DBSecurityGroupIngress:
+        - CIDRIP: '0.0.0.0/0'
