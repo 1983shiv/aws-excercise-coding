@@ -1,5 +1,10 @@
 AWS Certified DevOps Engineer
 
+Roles for Creating ec2 using Cloudformation template 
+Role : cfn-custom-roles-ec2-ssmparameter
+Arn : arn:aws:iam::484907483534:role/cfn-custom-roles-ec2-ssmparameter
+
+
 
 AWS ELB : https://www.canva.com/design/DAGUDCcZib8/dlSmSgJuNFziG4ybYEVM3Q/edit
 CloudFormation : https://www.canva.com/design/DAGVpPAEyWY/EVrR6j1GPKW01UXCDG9hmw/edit
@@ -30,6 +35,9 @@ https://explore.skillbuilder.aws/learn/course/external/view/elearning/14673/aws-
 
 Exam Guide : 
 https://d1.awsstatic.com/training-and-certification/docs-devops-pro/AWS-Certified-DevOps-Engineer-Professional_Exam-Guide.pdf
+
+Dynamic Reference: ssm-secure 
+https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html#template-parameters-dynamic-patterns-resources
 
 
 SDLC Automation:
@@ -646,4 +654,172 @@ What are the resources:
 	AWS -> aws::product-name::data-type-name 
 
 http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html	
+
+Docker:
+What is a Docker?
+	Docker is a containerization platform for developing, packaging, shipping and running applications.
+	It provides the ability to run an application in an isolated environment called a container.
+	Makes deployment and development efficient.
+
+What is a Container?
+	A way to package and application with all the necessary dependancies adn configuration.
+	It can be easily shared.
+	Makes deployment and development efficient.
+	Docker Container = Application + Libraries/dependancies (i.e. Node js application + node.js@18.x.x where node.js@18.x.x is required node developing environment)	
+
+Architecture of Docker 
+	Hardware (AWS, Azure or your PC)
+		OS (Windows, Mac or Linux)
+			Docker Engine 
+				Container [APP1 + Lib, Dependancies, Tools, Config]
+				Container [APP2 + Lib, Dependancies, Tools, Config]
+				Container [APP3 + Lib, Dependancies, Tools, Config]
+					Note : Where APP1, APP2, APP3 are individuels applications and don't interfare to eachother.
+
+Docker Vs Virtual Machine 
+	Docker ?
+		Low impact on OS, very fast, low disk space usage.
+		Sharing, re-building and distribution is easy.
+		Encapsulate apps instead of whole machine.
+	VM ?
+		High impact on OS, slower, high disk space usage.
+		Sharing, re-building and distribution is challenging.
+		Encapsulate whole machine.
+
+Components of Docer ?
+	DockerFile, Docker Image, Docker Container, Docker Registery
+
+Understanding Flow of Docker ?
+	DockerFile(It is a simple text file which contains instructions to build an image)
+		|
+	Image (Single file with all the dep. and lib. to run the application.)
+		|
+	Containers (Instance of an Image)
+
+What is Docker Registery?
+	A Docker registery is a central repository for storing and distributing docker images.
+	
+
+// To build an docker image from Dockerfile 		
+docker build .
+
+// -t stand for tag followed by name:version number
+docker build -t mynodeapp:01 .
+
+// list to display all the existing docker image
+docker image ls
+
+// list to display all the existing docker containers 
+docker container ls 
+
+// to start or stop the container 
+docker start <containerId>
+docker stop <containerId>
+
+// remove container 
+docker rm <containerId>
+
+// remove docker image 
+docker rmi <imageId>
+docker rmi -f <imageid>
+
+docker rmi "name:version"
+
+
+// docker running, it will list all the running images/containers 
+docker ps 
+docker ps -a (-a for all the docker process)
+
+// you can stop running docker image file using its name, first get all the ps using docker ps 
+// and then
+docker stop <name>
+
+docker run -p 3000:3000 <imageId>
+
+// running docker image in deattached mode, so your termincal does not got stuck.
+docker run -d -p 3000:3000 <imageId>
+
+// --rm flag is used, so when you stop your container, it will automatically remove
+docker run -d --rm -p 3000:3000 <imageId>
+
+// --name to provide name of your docker container
+docker run -d --rm --name "mywebapp" -p 3000:3000 <imageId>
+
+// interactive prompt where use can provide some input the application which is running in docker container 
+// as shown in python app docker container example 
+docker run -it <imageId>
+
+// to rename existing image, (from to to)
+docker tag mywebapp:02 shivsri/webapp-demo:02
+
+// adding volume to your docker, so it can store data/files in that volume, so if container goes down, your data/files will stay/stored in that volume 
+docker run -it -v <volumename>:<working directory> <imageId>
+
+i.e. docker run -it -v volume_userinfo:/userinfo userinfoimg
+
+// to list all the volume 
+docker volume ls 
+
+// inspect a existing volume
+
+docker volume inspect volume_userinfo
+{
+	"CreatedAt": "2025-01-25T07:31:36Z",
+	"Driver": "local",
+	"Labels": null,
+	"Mountpoint": "/var/lib/docker/volumes/volume_userinfo/_data",
+	"Name": "volume_userinfo",
+	"Options": null,
+	"Scope": "local"
+}
+
+
+What are Bind Mount?
+// it will mount the server_info.txt file into /myapp/server_info.txt and it will be available to docker container running app
+// And // uses for windows machine, if you working on linux, then just copy the absolute path of the file and mount it. 
+// We can mount entire directory as well
+
+docker run -v D://dockerapps//docker-python-test-app//server_info.txt:/serverinfo/server-info.txt --rm 8ccf36fe3219
+
+
+
+// just define the source and target directory and all the files will automatically update,
+// similar that you are working on your project and each day it get update by code, so you don't need to build it again and again 
+
+docker run -v /d/dockerapps/docker-python-test-app/:/serverinfo/ --rm serverinfo
+
+
+// Clear Docker cache by removing all stopped containers, unused networks, and dangling images:
+docker system prune -a -f
+
+What is .dockerignore
+Docker compose
+
+// check log of specific container or error troubleshooting
+docker log mysqldb 
+
+// where mysqldb is name of docker image
+
+docker pull mysql 
+docker run --name mysqldb -e MYSQL_ROOT_PASSWORD="testing123" -e MYSQL_DATABASE="user_info" -d mysql
+
+// then build your python app which use pymysql.connect() func to connect to database. 
+docker build -t mysqldb .
+
+Docker Compose ?
+It is a configuration file to manage multiple containers or single docker container running on same machine.
+It is written in YAML language.
+
+A Config file to make your task of managing and running containers easy.
+Get rid of repetitive command
+All the services inside the config file, share same network.
+
+commands:
+docker-compose up/down 
+docker-compose run <imagename> # as mentioned in your docker-compose file
+-d detach mode
+-v to remove networks/volumes upon stop 
+--build to again build the image and run
+
+
 
